@@ -5,24 +5,24 @@ import { Slot } from "@radix-ui/react-slot";
 
 export { clsx as cx };
 
-type AbstractCompose = (...params: any) => any;
+export type AbstractCompose = (...params: any) => any;
 
-type ResultProps<
+export type ResultProps<
   TComponent extends React.ElementType,
   TProps,
   TExtraProps,
   TCompose extends AbstractCompose,
 > = TProps extends undefined
   ? TExtraProps extends undefined
-    ? Omit<React.ComponentProps<TComponent>, "className"> & {
-        className?: Parameters<TCompose>[0];
-      }
-    : Omit<React.ComponentProps<TComponent>, "className"> & {
-        className?: Parameters<TCompose>[0];
-      } & TExtraProps
+  ? Omit<React.ComponentProps<TComponent>, "className"> & {
+    className?: Parameters<TCompose>[0];
+  }
+  : Omit<React.ComponentProps<TComponent>, "className"> & {
+    className?: Parameters<TCompose>[0];
+  } & TExtraProps
   : TProps;
 
-type Template<
+export type Template<
   TComponent extends React.ElementType,
   TCompose extends AbstractCompose,
   TExtraProps,
@@ -31,21 +31,21 @@ type Template<
   strings:
     | TemplateStringsArray
     | ((
-        props: ResultProps<TComponent, TProps, TExtraProps, TCompose>,
-      ) => "className" extends keyof TProps
-        ? TProps["className"]
-        : Parameters<TCompose>[0]),
+      props: ResultProps<TComponent, TProps, TExtraProps, TCompose>,
+    ) => "className" extends keyof TProps
+      ? TProps["className"]
+      : Parameters<TCompose>[0]),
   ...values: any[]
 ) => React.ForwardRefExoticComponent<
   ResultProps<TComponent, TProps, TExtraProps, TCompose>
 >;
 
-type ElementTagName = Exclude<
+export type ElementTagName = Exclude<
   keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap,
   "set"
 >;
 
-type FirstLevelTemplate<
+export type FirstLevelTemplate<
   TComponent extends React.ElementType,
   TCompose extends AbstractCompose,
   TExtraProps,
@@ -56,10 +56,10 @@ type FirstLevelTemplate<
   attrs: <TProps = undefined>(
     attrs:
       | (Omit<Partial<React.ComponentProps<TComponent>>, "className"> &
-          Record<string, any>)
+        Record<string, any>)
       | ((
-          props: ResultProps<TComponent, TProps, TExtraProps, TCompose>,
-        ) => Record<string, any>),
+        props: ResultProps<TComponent, TProps, TExtraProps, TCompose>,
+      ) => Record<string, any>),
   ) => Template<TComponent, TCompose, TExtraProps, TProps>;
 } & {
   /**
@@ -70,15 +70,15 @@ type FirstLevelTemplate<
   ) => FirstLevelTemplate<TComponent, TCompose, TExtraProps>;
 };
 
-type Twc<TCompose extends AbstractCompose> = (<T extends React.ElementType>(
+export type Twc<TCompose extends AbstractCompose> = (<T extends React.ElementType>(
   component: T,
 ) => FirstLevelTemplate<T, TCompose, undefined>) & {
-  [Key in ElementTagName]: FirstLevelTemplate<
-    Key,
-    TCompose,
-    { asChild?: boolean }
-  >;
-};
+    [Key in ElementTagName]: FirstLevelTemplate<
+      Key,
+      TCompose,
+      { asChild?: boolean }
+    >;
+  };
 
 export type TwcComponentProps<
   TComponent extends React.ElementType,
@@ -112,7 +112,7 @@ function filterProps(
   return filteredProps;
 }
 
-type Attributes = Record<string, any> | ((props: any) => Record<string, any>);
+export type Attributes = Record<string, any> | ((props: any) => Record<string, any>);
 
 export const createTwc = <TCompose extends AbstractCompose = typeof clsx>(
   config: Config<TCompose> = {},
@@ -145,12 +145,12 @@ export const createTwc = <TCompose extends AbstractCompose = typeof clsx>(
               className={
                 typeof resClassName === "function"
                   ? (renderProps: any) =>
-                      compose(
-                        resClassName(renderProps),
-                        typeof classNameProp === "function"
-                          ? classNameProp(renderProps)
-                          : classNameProp,
-                      )
+                    compose(
+                      resClassName(renderProps),
+                      typeof classNameProp === "function"
+                        ? classNameProp(renderProps)
+                        : classNameProp,
+                    )
                   : compose(resClassName, classNameProp)
               }
               {...fp}

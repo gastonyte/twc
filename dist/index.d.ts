@@ -39,6 +39,7 @@ type Config<TCompose extends AbstractCompose> = {
      */
     shouldForwardProp?: (prop: string) => boolean;
 };
+type Attributes = Record<string, any> | ((props: any) => Record<string, any>);
 declare const createTwc: <TCompose extends AbstractCompose = typeof clsx>(config?: Config<TCompose>) => Twc<TCompose>;
 declare const twc: Twc<typeof clsx>;
-export { clsx as cx, TwcComponentProps, Config, createTwc, twc };
+export { clsx as cx, AbstractCompose, ResultProps, Template, ElementTagName, FirstLevelTemplate, Twc, TwcComponentProps, Config, Attributes, createTwc, twc };
